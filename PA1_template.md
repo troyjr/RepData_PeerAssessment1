@@ -1,15 +1,27 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: "Troy Rose <troyjrose@gmail.com>"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+Troy Rose <troyjrose@gmail.com>  
 
 
 ## Loading and preprocessing the data
-````{r}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 activitydata<-read.csv("C:\\Users\\troy\\Desktop\\repdata-data-activity\\activity.csv")
 # translate time interval to %H:%M
 translate<-function(x){
@@ -20,41 +32,51 @@ activitydata$time<-lapply(activitydata$interval, translate)
 
 # create datetime field
 activitydata$datetime<-as.POSIXct(strptime(paste(activitydata$date, " ", activitydata$time), format = "%Y-%m-%d %H:%M"))
-
 ```
 
 
 ## What is mean total number of steps taken per day?
-```{r}
 
+```r
 activitydata.by.day<-group_by(activitydata, date)
 summary.activitydata.by.day<-summarise(activitydata.by.day, total = sum(steps))
 hist(summary.activitydata.by.day$total, main = "Histogram of steps per day")
-meansteps<-mean(summary.activitydata.by.day$total, na.rm=TRUE)
-mediansteps<-median(summary.activitydata.by.day$total, na.rm=TRUE)
-
 ```
 
-The mean steps per day is `r meansteps`.
+![plot of chunk unnamed-chunk-2](./PA1_template_files/figure-html/unnamed-chunk-2.png) 
 
-The median steps per day is `r mediansteps`.
+```r
+meansteps<-mean(summary.activitydata.by.day$total, na.rm=TRUE)
+mediansteps<-median(summary.activitydata.by.day$total, na.rm=TRUE)
+```
+
+The mean steps per day is 1.0766 &times; 10<sup>4</sup>.
+
+The median steps per day is 10765.
 
 ## What is the average daily activity pattern?
-```{r,echoresult="false"}
+
+```r
 library(ggplot2)
 activitydata.by.interval<-group_by(activitydata,interval)
 summary.activitydata.by.interval<-summarise(activitydata.by.interval, mean = mean(steps, na.rm=TRUE))
 qplot(summary.activitydata.by.interval$interval,summary.activitydata.by.interval$mean,ylab="Average number of steps per interval", xlab="5 minute intervals over 24 hours") + geom_line(aes(y = summary.activitydata.by.interval$mean), size = .5, alpha = 1)
+```
+
+![plot of chunk unnamed-chunk-3](./PA1_template_files/figure-html/unnamed-chunk-3.png) 
+
+```r
 maxmeansteps<-max(summary.activitydata.by.interval$mean, na.rm=TRUE)
 intmaxmeansteps<-filter(summary.activitydata.by.interval, mean==maxmeansteps)$interval
 ```
 
-The maximun of the mean total steps per day is `r maxmeansteps`.
+The maximun of the mean total steps per day is 206.1698.
 
-The 5-minute interval that, on average, contains the maximum number of steps  is `r intmaxmeansteps`.
+The 5-minute interval that, on average, contains the maximum number of steps  is 835.
 
 ## Inputing missing values
-```{r}
+
+```r
 totalnas<-length(activitydata$steps[is.na(activitydata$steps)])
 
 fillnas<-function(x) {
@@ -69,12 +91,15 @@ activitydata$stepsfilled<-apply(activitydata, c(1),fillnas)
 newactivitydata.by.day<-group_by(activitydata, date)
 summary.newactivitydata.by.day<-summarise(newactivitydata.by.day, total = sum(steps))
 hist(summary.newactivitydata.by.day$total,  main = "Histogram of steps per day")
+```
+
+![plot of chunk unnamed-chunk-4](./PA1_template_files/figure-html/unnamed-chunk-4.png) 
+
+```r
 newmeansteps<-mean(summary.newactivitydata.by.day$total, na.rm=TRUE)
 newmediansteps<-median(summary.newactivitydata.by.day$total, na.rm=TRUE)
-
-
 ```
-Number of NAs for steps is `r totalnas`.
+Number of NAs for steps is 2304.
 
 My strategy for sumplementing missing values for steps is:
 
@@ -84,16 +109,16 @@ My strategy for sumplementing missing values for steps is:
         
 The new steps filled in are stored in activitydata$stepsfilled.
 
-The mean steps per day is `r newmeansteps`.
+The mean steps per day is 1.0766 &times; 10<sup>4</sup>.
 
-The median steps per day is `r newmediansteps`.
+The median steps per day is 10765.
 
 It does not appear that filling in the missing values of steps made very much difference to the overall mean and median steps per day.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
 
+```r
 # create new factor with two levels for days of week in weekend and weekday
 activitydata$dayofweek<-factor(c("weekend", "weekday", NA))
 
@@ -110,6 +135,8 @@ summary.activitydata.by.dayofweek<-summarise(activitydata.by.dayofweek, mean = m
 # plot data
 qplot(interval, mean, data=summary.activitydata.by.dayofweek, ylab="Average number of steps per interval", xlab="5 minute intervals over 24 hours",facets = dayofweek ~ . ) + geom_line(aes(y = summary.activitydata.by.dayofweek$mean), size = .5, alpha = 1)
 ```
+
+![plot of chunk unnamed-chunk-5](./PA1_template_files/figure-html/unnamed-chunk-5.png) 
 
 Yes, it appears that on weekends, there is less early morning activity, with peak activity occuring at around 8:00am, with very little activity prior to 8:00am (it appears that people like to sleep in on weekends).
 
