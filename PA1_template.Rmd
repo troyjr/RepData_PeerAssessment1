@@ -10,6 +10,7 @@ output:
 ## Loading and preprocessing the data
 ````{r}
 library(dplyr)
+library(ggplot2)
 activitydata<-read.csv("C:\\Users\\troy\\Desktop\\repdata-data-activity\\activity.csv")
 # translate time interval to %H:%M
 translate<-function(x){
@@ -29,7 +30,7 @@ activitydata$datetime<-as.POSIXct(strptime(paste(activitydata$date, " ", activit
 
 activitydata.by.day<-group_by(activitydata, date)
 summary.activitydata.by.day<-summarise(activitydata.by.day, total = sum(steps))
-hist(summary.activitydata.by.day$total, main = "Histogram of steps per day")
+qplot(summary.activitydata.by.day$total, geom="histogram")
 meansteps<-mean(summary.activitydata.by.day$total, na.rm=TRUE)
 mediansteps<-median(summary.activitydata.by.day$total, na.rm=TRUE)
 

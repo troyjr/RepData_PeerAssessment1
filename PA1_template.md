@@ -22,6 +22,7 @@ library(dplyr)
 ```
 
 ```r
+library(ggplot2)
 activitydata<-read.csv("C:\\Users\\troy\\Desktop\\repdata-data-activity\\activity.csv")
 # translate time interval to %H:%M
 translate<-function(x){
@@ -40,7 +41,11 @@ activitydata$datetime<-as.POSIXct(strptime(paste(activitydata$date, " ", activit
 ```r
 activitydata.by.day<-group_by(activitydata, date)
 summary.activitydata.by.day<-summarise(activitydata.by.day, total = sum(steps))
-hist(summary.activitydata.by.day$total, main = "Histogram of steps per day")
+qplot(summary.activitydata.by.day$total, geom="histogram")
+```
+
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
 ![plot of chunk unnamed-chunk-2](./PA1_template_files/figure-html/unnamed-chunk-2.png) 
