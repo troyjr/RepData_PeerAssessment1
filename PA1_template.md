@@ -62,7 +62,6 @@ The median steps per day is 10765.
 ## What is the average daily activity pattern?
 
 ```r
-library(ggplot2)
 activitydata.by.interval<-group_by(activitydata,interval)
 summary.activitydata.by.interval<-summarise(activitydata.by.interval, mean = mean(steps, na.rm=TRUE))
 qplot(summary.activitydata.by.interval$interval,summary.activitydata.by.interval$mean,ylab="Average number of steps per interval", xlab="5 minute intervals over 24 hours") + geom_line(aes(y = summary.activitydata.by.interval$mean), size = .5, alpha = 1)
