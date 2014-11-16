@@ -35,7 +35,7 @@ meansteps<-mean(summary.activitydata.by.day$total, na.rm=TRUE)
 mediansteps<-median(summary.activitydata.by.day$total, na.rm=TRUE)
 
 ```
-
+80
 The mean steps per day is `r meansteps`.
 
 The median steps per day is `r mediansteps`.
@@ -68,7 +68,8 @@ activitydata$stepsfilled<-apply(activitydata, c(1),fillnas)
 
 newactivitydata.by.day<-group_by(activitydata, date)
 summary.newactivitydata.by.day<-summarise(newactivitydata.by.day, total = sum(steps))
-hist(summary.newactivitydata.by.day$total,  main = "Histogram of steps per day")
+#hist(summary.newactivitydata.by.day$total,  main = "Histogram of steps per day")
+qplot(summary.newactivitydata.by.day$total, geom="histogram")
 newmeansteps<-mean(summary.newactivitydata.by.day$total, na.rm=TRUE)
 newmediansteps<-median(summary.newactivitydata.by.day$total, na.rm=TRUE)
 

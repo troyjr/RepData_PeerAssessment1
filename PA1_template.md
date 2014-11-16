@@ -54,7 +54,7 @@ qplot(summary.activitydata.by.day$total, geom="histogram")
 meansteps<-mean(summary.activitydata.by.day$total, na.rm=TRUE)
 mediansteps<-median(summary.activitydata.by.day$total, na.rm=TRUE)
 ```
-
+80
 The mean steps per day is 1.0766 &times; 10<sup>4</sup>.
 
 The median steps per day is 10765.
@@ -94,7 +94,12 @@ activitydata$stepsfilled<-apply(activitydata, c(1),fillnas)
 
 newactivitydata.by.day<-group_by(activitydata, date)
 summary.newactivitydata.by.day<-summarise(newactivitydata.by.day, total = sum(steps))
-hist(summary.newactivitydata.by.day$total,  main = "Histogram of steps per day")
+#hist(summary.newactivitydata.by.day$total,  main = "Histogram of steps per day")
+qplot(summary.newactivitydata.by.day$total, geom="histogram")
+```
+
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
 ![plot of chunk unnamed-chunk-4](./PA1_template_files/figure-html/unnamed-chunk-4.png) 
