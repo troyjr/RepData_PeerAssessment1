@@ -39,6 +39,7 @@ activitydata$datetime<-as.POSIXct(strptime(paste(activitydata$date, " ", activit
 ## What is mean total number of steps taken per day?
 
 ```r
+# group, summarise, removing missing values
 activitydata.by.day<-group_by(activitydata, date)
 summary.activitydata.by.day<-summarise(activitydata.by.day, total = sum(steps))
 qplot(summary.activitydata.by.day$total, geom="histogram")
@@ -62,6 +63,7 @@ The median steps per day is 10765.
 ## What is the average daily activity pattern?
 
 ```r
+# group, summarise, removing missing values
 activitydata.by.interval<-group_by(activitydata,interval)
 summary.activitydata.by.interval<-summarise(activitydata.by.interval, mean = mean(steps, na.rm=TRUE))
 qplot(summary.activitydata.by.interval$interval,summary.activitydata.by.interval$mean,ylab="Average number of steps per interval", xlab="5 minute intervals over 24 hours") + geom_line(aes(y = summary.activitydata.by.interval$mean), size = .5, alpha = 1)
@@ -150,3 +152,5 @@ qplot(interval, mean, data=summary.activitydata.by.dayofweek, ylab="Average numb
 Yes, it appears that on weekends, there is less early morning activity, with peak activity occuring at around 8:00am, with very little activity prior to 8:00am (it appears that people like to sleep in on weekends).
 
 This is different to the weekdays where morning activity starts at around 5:00am and peaks at around 9:00am. 
+
+End of analysis.
